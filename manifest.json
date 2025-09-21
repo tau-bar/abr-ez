@@ -1,0 +1,29 @@
+{
+  "name": "abr-ez",
+  "description": "A simple extension to help you easily understand abbreviations.",
+  "version": "1.0",
+  "manifest_version": 3,
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "icons": {
+    "16": "images/icon-16.ico",
+    "32": "images/icon-32.ico",
+    "48": "images/icon-48.ico",
+    "128": "images/icon-128.ico"
+  },
+  "content_scripts": [
+    {
+      "js": ["scripts/content.js", "scripts/popup.js"],
+      "matches": ["<all_urls>"],
+      "exclude_matches": [
+        "https://www.google.com/*",
+        "https://www.bing.com/*",
+        "https://www.yahoo.com/*",
+        "https://www.duckduckgo.com/*"
+      ]
+    }
+  ]
+}
