@@ -5,7 +5,7 @@
     <style>
       body {
         width: 400px;
-        min-height: 500px;
+        min-height: 650px;
         margin: 0;
         padding: 16px;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -116,6 +116,16 @@
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         max-height: 300px;
         overflow-y: auto;
+        margin-bottom: 16px;
+        position: relative;
+      }
+
+      .abbreviations-header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: #f8f9fa;
+        border-bottom: 1px solid #e1e5e9;
       }
 
       .abbreviation-item {
@@ -196,11 +206,50 @@
       .hidden {
         display: none;
       }
+
+      .menu-item:hover {
+        background-color: #f8f9fa !important;
+      }
     </style>
   </head>
   <body>
-    <div class="header">
-      <h1>Abbreviation Manager</h1>
+
+    <div style="background: white; padding: 16px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 16px;">
+      <div class="form-group" style="margin-bottom: 0;">
+        <label for="search-input">Search Abbreviations</label>
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Search by abbreviation, meaning, or description..."
+          style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; box-sizing: border-box;"
+        />
+      </div>
+    </div>
+
+    <div class="abbreviations-list">
+      <div class="abbreviations-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-radius: 8px 8px 0 0;">
+        <h4 style="margin: 0; font-size: 14px; font-weight: 600; color: #2c3e50;">Saved Abbreviations</h4>
+        <div style="position: relative;">
+          <button id="list-menu-btn" class="btn btn-small" style="padding: 4px 8px; font-size: 16px; line-height: 1; background: white; border: 1px solid #ddd; color: #666;">⋯</button>
+          <div id="list-menu" class="hidden" style="position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); min-width: 150px; z-index: 20; margin-top: 4px;">
+            <button id="export-btn" class="menu-item" style="width: 100%; padding: 8px 12px; border: none; background: none; text-align: left; cursor: pointer; font-size: 14px; color: #333; border-radius: 4px;">
+              📤 Export to CSV
+            </button>
+          </div>
+        </div>
+      </div>
+      <div style="background: white; border-radius: 0 0 8px 8px;">
+        <div id="loading" class="loading">Loading abbreviations...</div>
+        <div id="empty-state" class="empty-state hidden">
+          <p>No abbreviations added yet.</p>
+          <p>Add your first abbreviation below!</p>
+        </div>
+        <div id="no-results" class="empty-state hidden">
+          <p>No abbreviations match your search.</p>
+          <p>Try a different search term.</p>
+        </div>
+        <div id="abbreviations-container"></div>
+      </div>
     </div>
 
     <div class="add-form">
@@ -234,20 +283,65 @@
         <label for="description">Description</label>
         <textarea
           id="description"
-          placeholder="Optional description of what this abbreviation means..."
+          placeholder="(Optional) Description of what it means"
         ></textarea>
       </div>
 
       <button id="add-btn" class="btn">Add Abbreviation</button>
     </div>
 
-    <div class="abbreviations-list">
-      <div id="loading" class="loading">Loading abbreviations...</div>
-      <div id="empty-state" class="empty-state hidden">
-        <p>No abbreviations added yet.</p>
-        <p>Add your first abbreviation above!</p>
+    <div class="add-form">
+      <h3 style="margin-top: 0; margin-bottom: 16px; color: #2c3e50;">
+        Import from CSV
+      </h3>
+
+      <div id="import-message-container"></div>
+
+      <div class="form-group">
+        <label for="csv-file">Select CSV File</label>
+        <input
+          type="file"
+          id="csv-file"
+          accept=".csv"
+          style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: white;"
+        />
+        <small style="color: #7f8c8d; font-size: 12px; margin-top: 4px; display: block;">
+          CSV format: abbreviation,meaning,description (description is optional)
+        </small>
       </div>
-      <div id="abbreviations-container"></div>
+
+      <div class="form-group">
+        <label style="display: flex; align-items: left;">
+          <input type="checkbox" id="overwrite-duplicates" style="width: 10px; height: 10px;">
+          Overwrite existing abbreviations
+        </label>
+      </div>
+
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button id="import-btn" class="btn" disabled>Import CSV</button>
+        <button id="download-template-btn" class="btn btn-secondary">Download Template</button>
+      </div>
+
+      <div id="import-progress" class="hidden" style="margin-top: 12px;">
+        <div style="background: #f0f0f0; border-radius: 4px; height: 8px; overflow: hidden;">
+          <div id="progress-bar" style="background: #007acc; height: 100%; width: 0%; transition: width 0.3s;"></div>
+        </div>
+        <div id="progress-text" style="font-size: 12px; color: #7f8c8d; margin-top: 4px; text-align: center;"></div>
+      </div>
+    </div>
+
+    <div class="add-form">
+      <h3 style="margin-top: 0; margin-bottom: 16px; color: #2c3e50;">
+        Reset Data
+      </h3>
+
+      <div id="reset-message-container"></div>
+
+      <p style="color: #7f8c8d; font-size: 13px; margin-bottom: 16px;">
+        This will permanently delete all your saved abbreviations. This action cannot be undone.
+      </p>
+
+      <button id="reset-btn" class="btn btn-danger">Reset All Abbreviations</button>
     </div>
 
     <script src="scripts/popup.js"></script>

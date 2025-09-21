@@ -20,9 +20,12 @@
       "matches": ["<all_urls>"],
       "exclude_matches": [
         "https://www.google.com/*",
+        "https://google.com/*",
         "https://www.bing.com/*",
+        "https://bing.com/*",
         "https://www.yahoo.com/*",
-        "https://www.duckduckgo.com/*"
+        "https://yahoo.com/*",
+        "https://duckduckgo.com/*"
       ]
     }
   ]
