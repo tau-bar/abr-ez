@@ -113,18 +113,19 @@ function processTextNode(textNode, abbreviations) {
   let hasAbbreviations = false;
   let newHTML = text;
   
-  // Create a regex pattern for all abbreviations (case-insensitive)
+  // Create a regex pattern for all abbreviations (case-sensitive by default)
   const abbreviationPattern = new RegExp(
     '\\b(' + Object.keys(abbreviations).join('|') + ')\\b',
-    'gi'
+    'g'
   );
   
   newHTML = newHTML.replace(abbreviationPattern, (match) => {
-    const upperMatch = match.toUpperCase();
-    if (abbreviations[upperMatch]) {
+    // Case-sensitive matching - check for exact match
+    if (abbreviations[match]) {
       hasAbbreviations = true;
-      return `<span class="abbreviation" data-abbr="${upperMatch}">${match}</span>`;
+      return `<span class="abbreviation" data-abbr="${match}">${match}</span>`;
     }
+    
     return match;
   });
   
@@ -224,6 +225,7 @@ async function getAbbreviations() {
   const userAbbreviations = result[storageKey] || {};
   return userAbbreviations
 }
+
 
 // Auto-initialize when the DOM is ready
 if (document.readyState === 'loading') {

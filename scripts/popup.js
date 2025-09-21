@@ -159,7 +159,7 @@ function displayAbbreviations(abbreviations) {
 }
 
 function addAbbreviation() {
-  const abbreviation = abbreviationInput.value.trim().toUpperCase();
+  const abbreviation = abbreviationInput.value.trim();
   const meaning = meaningInput.value.trim();
   const description = descriptionInput.value.trim();
   
@@ -666,4 +666,4 @@ function handleExportClick() {
   listMenu.classList.add('hidden');
   // Then call the export function
   exportCSV();
-} 
+}
