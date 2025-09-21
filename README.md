@@ -12,11 +12,12 @@ Because I don't want to pay 💸 **$5** 💸 to publish an extension in the Chro
 I **promise** 🤞🏾 that I did not put any viruses in this, feel free to check the source code before using it.
 
 # 🛠️ Setup Guide
-1. Go to [chrome://extensions/]() (or {browser}://extensions if you're using another browser which supports Chrome extensions e.g. Arc).
-2. Set Developer mode to on.
-3. Click "Load Unpacked", and select this repo in the file selection.
-4. The extension should be loaded in your browser.
-5. If you only want it to be loaded on certain websites, you can set it in the `matches` attribute in `manifest.json`
+1. Download the latest release and unzip.
+2. Go to [chrome://extensions/]() (or {browser}://extensions if you're using another browser which supports Chrome extensions e.g. Arc).
+3. Set Developer mode to on.
+4. Click "Load Unpacked", and select the `abr-ez` folder in the file selection.
+5. The extension should be loaded in your browser.
+6. If you only want it to be loaded on certain websites, you can set it in the `matches` attribute in `manifest.json`
 ```
 "matches": [
     // remove <all_urls>
@@ -25,7 +26,7 @@ I **promise** 🤞🏾 that I did not put any viruses in this, feel free to chec
     ...
 ],
 ```
-6. If it is messing up some websites (e.g. search engines), add the base url to the `exclude_matches` attribute in `manifest.json`.
+7. If it is messing up some websites (e.g. search engines), add the base url to the `exclude_matches` attribute in `manifest.json`.
 ```
 "exclude_matches": [
     "https://www.google.com/*",
@@ -37,4 +38,4 @@ I **promise** 🤞🏾 that I did not put any viruses in this, feel free to chec
     "https://duckduckgo.com/*"
 ]
 ```
-7. If you made any changes, press the refresh button on the extension in the extensions page to reload the latest version.
+8. If you made any changes, press the refresh button on the extension in the extensions page to reload the latest version.
